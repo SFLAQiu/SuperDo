@@ -11,7 +11,7 @@ using System.Net;
 namespace BLL
 {
     public class SuperHander {
-
+        public static Dictionary<string, List<decimal>> AutionDatas = new Dictionary<string, List<decimal>>();
         #region "积分竞拍"
         /// <summary>
         /// 获取商品我的出价记录
@@ -88,6 +88,10 @@ namespace BLL
                },
                timeoutMillisecond: 60000
            );
+            if (htmlStr.Contains("积分不够")) {
+                msg = "战士牺牲，积分不够！！";
+                return false;
+            }
             if (!htmlStr.Contains("Bingo")) {
                 msg = "商品ID={0}出价报错！！！".FormatStr(goodsId);
                 return false;
@@ -96,14 +100,85 @@ namespace BLL
             return true;
 
         }
+
+        /// <summary>
+        /// 监控并出价
+        /// </summary>
+        /// <param name="goodsId"></param>
+        /// <param name="cookie"></param>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public bool DoAutionHander(int goodsId, CookieCollection cookie, out string msg,out bool needGo) {
+            needGo = true;
+            msg = string.Empty;
+            var goodsPriceDatas = GetGoodsIdByUrl(goodsId, cookie, out msg);
+            bool isHave;
+            var minPrice = GetMinPirce(goodsPriceDatas, out isHave);
+            if (minPrice < (decimal)0.01 || minPrice > 1000) {
+                msg = "获取最低价格错误！！";
+                return false;
+            }
+            var isMy = IsMyMinPrice(goodsId, minPrice);
+            if (isMy) {
+                msg = "最低价格：{0},是我自己出的！！".FormatStr(minPrice);
+                needGo = false;
+                return false;
+            }
+            //出价
+            var isSc = AutionPrice(goodsId, minPrice, cookie, out msg);
+            if (isSc) AddAution(goodsId, minPrice);
+            return isSc;
+        }
         /// <summary>
         /// 判断价格是不是我自己出过最低记录
         /// </summary>
         /// <param name="prize"></param>
         /// <returns></returns>
-        public bool IsMyMinPrice(int goodsId, decimal prize, CookieCollection cookies) {
-            var myList = GetMyGoods(goodsId, cookies);
-            return myList.FindIndex(d => d == prize) >= 0;
+        public bool IsMyMinPrice(int goodsId, decimal prize) {
+            var dataItem = GetGoodsAutions(goodsId);
+            var autions=dataItem.Value;
+            if(autions==null || autions.Count<=0)return false;
+            return autions.FindIndex(d => d == prize) > 0;
+        }
+        private KeyValuePair<string, List<decimal>> GetGoodsAutions(int goodsId) {
+            return AutionDatas.FirstOrDefault(d => d.Key == goodsId.ToString());
+        }
+        private void AddAution(int goodsId, decimal price) {
+            var dataItem = GetGoodsAutions(goodsId);
+            var autions = dataItem.Value;
+            if (autions==null) {
+                AutionDatas.Add(goodsId.ToString(), new List<decimal> {price});
+                return;
+            }
+            autions.Add(price);
+
+        }
+        /// <summary>
+        /// 获取所有账号的出价
+        /// </summary>
+        /// <returns></returns>
+        public List<decimal> GetAllAccountAution(int goodsId) {
+            List<decimal> rtnDatas = new List<decimal>();
+            foreach (var item in CommonConfig.GetLoginCookies()) {
+                var cookies = item.Value;
+                var myList = GetMyGoods(goodsId, cookies);
+                if (myList == null) continue;
+                foreach (var autionItem in myList) {
+                    if (rtnDatas.FindIndex(d => d == autionItem) > 0) continue;
+                    rtnDatas.Add(autionItem);
+                }
+            }
+            return rtnDatas.OrderBy(d => d).ToList();
+        }
+        /// <summary>
+        /// 移除没有积分的用户
+        /// </summary>
+        public void DoMoveNoJF() {
+            foreach (var item in CommonConfig.GetLoginCookies()) {
+               var jf= GetMyJiFen(item.Value);
+               if (jf > 0) continue;
+               CommonConfig.GetLoginCookies().Remove(item.Key);
+            }
         }
 
         /// <summary>

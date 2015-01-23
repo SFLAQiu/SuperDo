@@ -137,37 +137,6 @@ namespace Helper {
                         Value = "563644741%40qq.com"
                     }
             });
-            datas.Add("634246137@qq.com",
-                new CookieCollection() { 
-                    new Cookie {
-                        Domain = ".fanhuan.com",
-                        Expires = DateTime.Now.AddYears(10),
-                        Path = "/",
-                        Name = "A9D5EMD96D5E5G",
-                        Value = "83OZDnDJthT66F/JWCw1vC2KgC6uamFC4945CEOz6/s="
-                    },
-                    new Cookie {
-                        Domain = ".fanhuan.com",
-                        Expires = DateTime.Now.AddYears(10),
-                        Path = "/",
-                        Name = "checkNum",
-                        Value = "7086e89d95cbbbe692b3b4a2810e4b7d"
-                    },
-                    new Cookie {
-                        Domain = ".fanhuan.com",
-                        Expires = DateTime.Now.AddYears(10),
-                        Path = "/",
-                        Name = "userDetial",
-                        Value = "634246137%40qq.com%7c10166332%7c3"
-                    },
-                    new Cookie {
-                        Domain = ".fanhuan.com",
-                        Expires = DateTime.Now.AddYears(10),
-                        Path = "/",
-                        Name = "user_name",
-                        Value = "634246137%40qq.com"
-                    }
-            });
             datas.Add("543035699@qq.com",
                 new CookieCollection() { 
                     new Cookie {
@@ -199,6 +168,38 @@ namespace Helper {
                         Value = "543035699%40qq.com"
                     }
             });
+            datas.Add("634246137@qq.com",
+                new CookieCollection() { 
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "A9D5EMD96D5E5G",
+                        Value = "83OZDnDJthT66F/JWCw1vC2KgC6uamFC4945CEOz6/s="
+                    },
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "checkNum",
+                        Value = "7086e89d95cbbbe692b3b4a2810e4b7d"
+                    },
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "userDetial",
+                        Value = "634246137%40qq.com%7c10166332%7c3"
+                    },
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "user_name",
+                        Value = "634246137%40qq.com"
+                    }
+            });
+            
             datas.Add("tmacdream@qq.com",
                 new CookieCollection() { 
                     new Cookie {
@@ -541,6 +542,37 @@ namespace Helper {
                         Path = "/",
                         Name = "user_name",
                         Value = "408388680%40qq.com"
+                }
+            });
+            datas.Add("aqiu0001@qq.com",
+            new CookieCollection() { 
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "A9D5EMD96D5E5G",
+                        Value = "b8VgLbzEBheYaZd8C58Z5TwJNDH63d/7Iu6dgeJyH94="
+                    },
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "checkNum",
+                        Value = "e38c524e438b89280efdcc9d06e2cbe4"
+                    },
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "userDetial",
+                        Value = "aqiu0001%40qq.com%7c10509009%7c3"
+                    },
+                    new Cookie {
+                        Domain = ".fanhuan.com",
+                        Expires = DateTime.Now.AddYears(10),
+                        Path = "/",
+                        Name = "user_name",
+                        Value = "aqiu0001%40qq.com"
                 }
             });
             return datas;
