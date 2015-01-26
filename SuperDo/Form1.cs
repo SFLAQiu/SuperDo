@@ -172,6 +172,25 @@ namespace SuperDo {
                 WriteLog("\r\n");
             }
         }
+
+        private void Go() {
+            _IsStop = false;
+            _IsBindSc = false;
+            //绑定下我的所有账号的出价记录
+            BindMyAllAutionData();
+            this.timer1.Interval = this.numericUpDown1.Value.GetInt(0, false) * 1000;
+            this.timer1.Start();
+        }
+
+        private void LetGo() {
+            _IsStop = false;
+            _IsBindSc = false;
+            //绑定下我的所有账号的出价记录
+            BindMyAllAutionData();
+            this.time_LetGo.Interval = this.numericUpDown1.Value.GetInt(0, false) * 1000;
+            this.time_LetGo.Start();
+        }
+
         #endregion
         /// <summary>
         /// 开启单人模式
@@ -179,12 +198,7 @@ namespace SuperDo {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e) {
-            _IsStop = false;
-            _IsBindSc = false;
-            //绑定下我的所有账号的出价记录
-            BindMyAllAutionData();
-            this.timer1.Interval = this.numericUpDown1.Value.GetInt(0, false) * 1000;
-            this.timer1.Start();
+            Go();
         }
         /// <summary>
         /// 停止
@@ -271,12 +285,22 @@ namespace SuperDo {
         /// <param name="e"></param>
         private void time_LetGo_Tick(object sender, EventArgs e) {
             if (_IsStop) {
-                this.timer1.Stop();
+                this.time_LetGo.Stop();
                 return;
             }
             if (!_IsBindSc) {
                 WriteLog("绑定数据，还在进行中。。。");
                 return;
+            }
+            if (this.ckb_time.Checked) { 
+                var nowDate=DateTime.Now;
+                var eDateTime = nowDate.Date;
+                eDateTime=eDateTime.AddHours(this.txt_hour.Text.GetInt(0, false));
+                eDateTime=eDateTime.AddMinutes(this.txt_m.Text.GetInt(0, false));
+                if (nowDate.CompareTo(eDateTime) >= 0) {
+                    this.time_LetGo.Stop();
+                    return;
+                }
             }
             SuperLetDo();
         }
@@ -296,5 +320,84 @@ namespace SuperDo {
             WriteLog("获取物品结束，获取到的总数为：{0}！！！".FormatStr(goodsInfos.Count));
             this.textBox2.Text = goodsIds.ToJoinStr(",");
         }
+        /// <summary>
+        /// 隐藏软件
+        /// </summary>
+        private void DoHideSoft() {
+            this.ShowInTaskbar = false;
+            this.myIcon.Icon = this.Icon;
+            this.Hide();
+        }
+        /// <summary>
+        /// 窗口大小变化出发事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_Resize(object sender, EventArgs e) {
+            //窗体最小化时   
+            if (this.WindowState == FormWindowState.Minimized) {
+                DoHideSoft();
+            }  
+        }
+        /// <summary>
+        /// 右下角任务栏，程序被点击
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void myIcon_MouseClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Left) {
+                this.Visible = true;
+                this.WindowState = FormWindowState.Normal;
+            }
+            if (e.Button == MouseButtons.Right) {
+                //显示鼠标右击菜单
+                this.contextMenuStrip1.Show();
+            }
+        }
+        /// <summary>
+        /// 停止
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e) {
+            this._IsStop = true;
+        }
+        /// <summary>
+        /// 退出 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e) {
+            Application.Exit();
+        }
+        /// <summary>
+        /// GO
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void goToolStripMenuItem_Click(object sender, EventArgs e) {
+            Go();
+        }
+        /// <summary>
+        /// Let GO
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void letGoToolStripMenuItem_Click(object sender, EventArgs e) {
+            LetGo();
+        }
+        /// <summary>
+        /// 关闭窗体中的事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e) {
+            //当用户点击窗体右上角X按钮或(Alt + F4)时 发生  
+            if (e.CloseReason == CloseReason.UserClosing) {
+                e.Cancel = true;
+                DoHideSoft();
+            }
+        }
+
     }
 }
