@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LG.Utility">
-      <HintPath>..\..\..\YYQCode\GitHub\SharedCode\LG.Utility\Bin\LG.Utility\DLL\Release\LG.Utility.dll</HintPath>
+    <Reference Include="LG.Utility, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SharedCode\LG.Utility\Bin\LG.Utility\DLL\Release\LG.Utility.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

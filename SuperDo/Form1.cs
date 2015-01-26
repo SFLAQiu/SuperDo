@@ -148,11 +148,13 @@ namespace SuperDo {
             foreach (var goodId in GetGoodsIds()) {
                 WriteLog("开启疯狂模式！！！", true);
                 WriteLog("物品{0}，正在接受神一般的出价！！！".FormatStr(goodId));
-                foreach (var item in CommonConfig.GetLoginCookies()) {
+                var isRandom = this.check_People.Checked;
+                var userCookieDatas = CommonConfig.GetLoginCookies(isNeedRandom: isRandom);
+                foreach (var item in userCookieDatas) {
                     var personName = item.Key;
                     var cookies = item.Value;
                     WriteLog("正在接受{0},的轰炸！！！！".FormatStr(personName));
-                    var jf= _bllSuper.GetMyJiFen(cookies);
+                    var jf = _bllSuper.GetMyJiFen(cookies);
                     if (jf <= 0) {
                         CommonConfig.GetLoginCookies().Remove(personName);
                         WriteLog("战士{0},牺牲积分不够！！！！".FormatStr(personName));
@@ -277,6 +279,22 @@ namespace SuperDo {
                 return;
             }
             SuperLetDo();
+        }
+        /// <summary>
+        /// 获取物品
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_GetGoods_Click(object sender, EventArgs e) {
+            WriteLog("主人，我正在努力加载物品数据。。。");
+            var goodsInfos = _bllSuper.GetGoodsInfo() ?? new Dictionary<int, string>();
+            List<int> goodsIds = new List<int>();
+            foreach (var item in goodsInfos) {
+                goodsIds.Add(item.Key);
+                WriteLog("物品ID：{0}，{1}".FormatStr(item.Key,item.Value));
+            }
+            WriteLog("获取物品结束，获取到的总数为：{0}！！！".FormatStr(goodsInfos.Count));
+            this.textBox2.Text = goodsIds.ToJoinStr(",");
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using LG.Utility;
 
 namespace Helper {
     public class CommonConfig {
@@ -104,7 +105,7 @@ namespace Helper {
         /// 登陆Cookies
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<string,CookieCollection> GetLoginCookies() {
+        public static Dictionary<string,CookieCollection> GetLoginCookies(bool isNeedRandom=false) {
             var datas = new  Dictionary<string,CookieCollection>();
             datas.Add("563644741@qq.com",
                 new CookieCollection() { 
@@ -575,6 +576,22 @@ namespace Helper {
                         Value = "aqiu0001%40qq.com"
                 }
             });
+            if (isNeedRandom) {
+                var randomDatas = new Dictionary<string, CookieCollection>();
+                List<string> keys = new List<string>();
+                foreach (var item in datas) {
+                    keys.Add(item.Key);
+                }
+                RandomHelper r = new RandomHelper();
+                var keysArr = keys.ToArray();
+                r.GetRandomArray<string>(ref keysArr);
+                foreach (var item in keysArr) {
+                    var itemData=datas.FirstOrDefault(d => d.Key == item);
+                    if (itemData.Equals(default(KeyValuePair<string, CookieCollection>))) continue;
+                    randomDatas.Add(itemData.Key, itemData.Value);
+                }
+                datas = randomDatas;
+            }
             return datas;
         }
     }

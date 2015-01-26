@@ -92,6 +92,11 @@ namespace BLL
                 msg = "战士牺牲，积分不够！！";
                 return false;
             }
+            if (htmlStr.Contains("非法物品")) {
+                msg = "亲，物品活动结束了哦！！";
+                return false;
+            }
+            
             if (!htmlStr.Contains("Bingo")) {
                 msg = "商品ID={0}出价报错！！！".FormatStr(goodsId);
                 return false;
@@ -208,7 +213,6 @@ namespace BLL
             return g[1].Value.JSONDeserialize<List<GoodsAuctionPrice>>();
         }
         #endregion
-
         #region "积分"
         /// <summary>
         /// 获取我的积分
@@ -263,5 +267,40 @@ namespace BLL
             return isSc;
         }
         #endregion
+        #region "物品"
+        /// <summary>
+        /// 获取物品信息，key：物品ID，value：物品名称
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<int, string> GetGoodsInfo() {
+            Dictionary<int, string> datas = new Dictionary<int, string>();
+            var getUserJiFenStr = HttpAjax.GetHttpContent(
+             RequestType.GET,
+             CommonConfig.GetMyPirceURL,
+             null,
+             null,
+             null,
+             timeoutMillisecond: 60000
+           );
+            Regex rLi=new Regex("<li[^>]*>(.*?)</li>", RegexOptions.Singleline);
+            var matchs = rLi.Matches(getUserJiFenStr);
+            if (matchs == null && matchs.Count <= 0) return null;
+            for (int i = 0; i < matchs.Count; i++) {
+                var g = matchs[i].Groups;
+                if (matchs == null) continue;
+                var itemGoodsHtml = g[1].Value;
+                var mDataId=Regex.Match(itemGoodsHtml, "data-id=\"([0-9]*?)\"", RegexOptions.Singleline);
+                var mTitle = Regex.Match(itemGoodsHtml, "title=\"(.*?)\"", RegexOptions.Singleline);
+                var dataId = 0;
+                var title = string.Empty;
+                if (mDataId != null && mDataId.Groups.Count > 1) dataId = mDataId.Groups[1].Value.GetInt(0, false);
+                if (mTitle != null && mTitle.Groups.Count > 1) title = mTitle.Groups[1].Value;
+                if (dataId <= 0 || title.IsNullOrWhiteSpace()) continue;
+                datas.Add(dataId,title);
+            }
+            return datas;
+        }
+        #endregion
+
     }
 }
