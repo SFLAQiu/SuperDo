@@ -43,11 +43,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.myIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.letGoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.txt_hour = new System.Windows.Forms.TextBox();
             this.txt_m = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -62,9 +62,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(248, 387);
+            this.button1.Location = new System.Drawing.Point(232, 385);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(64, 23);
+            this.button1.Size = new System.Drawing.Size(37, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "GO";
             this.button1.UseVisualStyleBackColor = true;
@@ -149,9 +149,9 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(318, 387);
+            this.button5.Location = new System.Drawing.Point(275, 385);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(64, 23);
+            this.button5.Size = new System.Drawing.Size(50, 23);
             this.button5.TabIndex = 8;
             this.button5.Text = "Let GO";
             this.button5.UseVisualStyleBackColor = true;
@@ -220,6 +220,29 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(104, 70);
             // 
+            // startToolStripMenuItem
+            // 
+            this.startToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.goToolStripMenuItem,
+            this.letGoToolStripMenuItem});
+            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
+            this.startToolStripMenuItem.Text = "Start";
+            // 
+            // goToolStripMenuItem
+            // 
+            this.goToolStripMenuItem.Name = "goToolStripMenuItem";
+            this.goToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.goToolStripMenuItem.Text = "Go";
+            this.goToolStripMenuItem.Click += new System.EventHandler(this.goToolStripMenuItem_Click);
+            // 
+            // letGoToolStripMenuItem
+            // 
+            this.letGoToolStripMenuItem.Name = "letGoToolStripMenuItem";
+            this.letGoToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
+            this.letGoToolStripMenuItem.Text = "Let Go";
+            this.letGoToolStripMenuItem.Click += new System.EventHandler(this.letGoToolStripMenuItem_Click);
+            // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
@@ -233,29 +256,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // startToolStripMenuItem
-            // 
-            this.startToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.goToolStripMenuItem,
-            this.letGoToolStripMenuItem});
-            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
-            this.startToolStripMenuItem.Text = "Start";
-            // 
-            // goToolStripMenuItem
-            // 
-            this.goToolStripMenuItem.Name = "goToolStripMenuItem";
-            this.goToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.goToolStripMenuItem.Text = "Go";
-            this.goToolStripMenuItem.Click += new System.EventHandler(this.goToolStripMenuItem_Click);
-            // 
-            // letGoToolStripMenuItem
-            // 
-            this.letGoToolStripMenuItem.Name = "letGoToolStripMenuItem";
-            this.letGoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.letGoToolStripMenuItem.Text = "Let Go";
-            this.letGoToolStripMenuItem.Click += new System.EventHandler(this.letGoToolStripMenuItem_Click);
             // 
             // txt_hour
             // 
