@@ -27,15 +27,15 @@ namespace SuperDo {
         /// </summary>
         private bool _IsBindSc = false;
         /// <summary>
-        /// 获取积分线程
+        /// 获取初始化线程
         /// </summary>
-        private Thread _TGetJFRun;
+        private Thread _TIni;
         /// <summary>
         /// 获取积分线程
         /// </summary>
         private Thread _TBindAution;
         private static Dictionary<int, Thread> ThreadMessages = new Dictionary<int, Thread>();
-
+        private static Dictionary<int, object> lockOjb = new Dictionary<int, object>();
         #endregion
         public Form1() {
             Control.CheckForIllegalCrossThreadCalls = false;
@@ -118,13 +118,13 @@ namespace SuperDo {
             if (_TBindAution != null && !_TBindAution.IsAlive) {
                 _TBindAution.Abort();
             }
-            if (_TGetJFRun != null && !_TGetJFRun.IsAlive) {
-                _TGetJFRun.Abort();
+            if (_TIni != null && !_TIni.IsAlive) {
+                _TIni.Abort();
             }
             if (_TBindAution != null && _TBindAution.IsAlive) {
                 return;
             }
-            if (_TGetJFRun != null && _TGetJFRun.IsAlive) {
+            if (_TIni != null && _TIni.IsAlive) {
                 return;
             }
             StopThreedMonitoring();
@@ -144,87 +144,55 @@ namespace SuperDo {
                 RefleshAutionLog();
             }
         }
-        ///// <summary>
-        ///// 出价单人出价
-        ///// </summary>
-        //private void SuperLetDo() {
-        //    string msg;
-        //    bool needGo=true;
-        //    foreach (var goodId in GetGoodsIds()) {
-        //        WriteLog("开启疯狂模式！！！", true);
-        //        WriteLog("物品{0}，正在接受神一般的出价！！！".FormatStr(goodId));
-        //        var isRandom = this.check_People.Checked;
-        //        var userCookieDatas = CommonConfig.GetLoginCookies(isNeedRandom: isRandom);
-        //        foreach (var item in userCookieDatas) {
-        //            var personName = item.Key;
-        //            var cookies = item.Value;
-        //            var jf = _bllSuper.GetMyJiFen(cookies);
-        //            while(jf>0){
-        //                WriteLog("正在接受{0},的轰炸！！！！".FormatStr(personName));
-        //                if (jf <= 0) {
-        //                    CommonConfig.GetLoginCookies().Remove(personName);
-        //                    WriteLog("战士{0},牺牲积分不够！！！！".FormatStr(personName));
-        //                    continue;
-        //                }
-        //                bool isSc = _bllSuper.DoAutionHander(goodId, cookies, out msg, out needGo);
-        //                if (isSc) jf--;
-        //                WriteLog(msg);
-        //                RefleshAutionLog();
-        //                if (!isSc || !needGo) break;
-        //            }
-        //            if (!needGo) {
-        //                WriteLog("战士{0},已经拿下！,坐观全局中。。。。".FormatStr(personName));
-        //                break;
-        //            }
-                   
-        //        }
-        //        WriteLog("", false);
-        //        WriteLog("\r\n");
-        //    }
-        //}
         /// <summary>
         /// 出价操作
         /// </summary>
         /// <param name="obj"></param>
         private void DoAution(object obj) {
             var tData = obj as ThreadData;
-            if (tData == null) return;
             var goodId = tData.Data.GetInt(0, false);
-            StringBuilder msgLog = new StringBuilder();
-            msgLog.Append("---------------开启：{0}------------------\r\n".FormatStr(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
-            msgLog.Append("开启疯狂模式！！！\r\n");
-            msgLog.Append("物品{0}，正在接受神一般的出价！！！\r\n".FormatStr(goodId));
-            var isRandom = this.check_People.Checked;
-            var userCookieDatas = CommonConfig.GetLoginCookies(isNeedRandom: isRandom);
-            foreach (var item in userCookieDatas) {
-                bool needGo = true;
-                var personName = item.Key;
-                var cookies = item.Value;
-                var jf = _bllSuper.GetMyJiFen(cookies);
-                if (jf <= 0) {
-                    CommonConfig.GetLoginCookies().Remove(personName);
-                    msgLog.Append("战士{0},牺牲积分不够！！！！\r\n".FormatStr(personName));
-                    continue;
-                }
-                //一直出价，直到积分不够用
-                while (jf > 0) {
-                    msgLog.Append("正在接受{0},的轰炸！！！！\r\n".FormatStr(personName));
-                    string msg;
-                    bool isSc = _bllSuper.DoAutionHander(goodId, cookies, out msg, out needGo);
-                    if (isSc) jf--;
-                    msgLog.Append(msg + "\r\n");
-                    RefleshAutionLog();
-                    if (!isSc || !needGo) break;
-                }
-                if (!needGo) {
-                    msgLog.Append("这个物品已经被我们拿下！,坐观全局中。。。。\r\n");
-                    break;
-                }
+            var lockGoods = lockOjb.FirstOrDefault(d => d.Key == goodId).Value;
+            if (tData == null || lockGoods==null) {
+                tData.Td.Abort();
+                return;
             }
-            msgLog.Append("---------------结束：{0}------------------\r\n\r\n".FormatStr(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
-            WriteLog(msgLog.ToString());
-            //结束线程
-            tData.Td.Abort();
+            lock (lockGoods) {
+                StringBuilder msgLog = new StringBuilder();
+                msgLog.Append("---------------开启：{0}------------------\r\n".FormatStr(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                msgLog.Append("开启疯狂模式！！！\r\n");
+                msgLog.Append("物品{0}，正在接受神一般的出价！！！\r\n".FormatStr(goodId));
+                var isRandom = this.check_People.Checked;
+                var userCookieDatas = CommonConfig.GetLoginCookies(isNeedRandom: isRandom);
+                foreach (var item in userCookieDatas) {
+                    bool needGo = true;
+                    var personName = item.Key;
+                    var cookies = item.Value;
+                    var jf = _bllSuper.GetMyJiFen(cookies);
+                    if (jf <= 0) {
+                        CommonConfig.GetLoginCookies().Remove(personName);
+                        msgLog.Append("战士{0},牺牲积分不够！！！！\r\n".FormatStr(personName));
+                        continue;
+                    }
+                    //一直出价，直到积分不够用
+                    while (jf > 0) {
+                        msgLog.Append("正在接受{0},的轰炸！！！！\r\n".FormatStr(personName));
+                        string msg;
+                        bool isSc = _bllSuper.DoAutionHander(goodId, cookies, out msg, out needGo);
+                        if (isSc) jf--;
+                        msgLog.Append(msg + "\r\n");
+                        RefleshAutionLog();
+                        if (!isSc || !needGo) break;
+                    }
+                    if (!needGo) {
+                        msgLog.Append("这个物品已经被我们拿下！,坐观全局中。。。。\r\n");
+                        break;
+                    }
+                }
+                msgLog.Append("---------------结束：{0}------------------\r\n\r\n".FormatStr(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                WriteLog(msgLog.ToString());
+                //结束线程
+                tData.Td.Abort();
+            }
         }
 
         /// <summary>
@@ -236,8 +204,8 @@ namespace SuperDo {
                 var data = ThreadMessages.FirstOrDefault(d=>d.Key==goodId);
                 var t = new Thread(new ParameterizedThreadStart(DoAution));
                 t.Start(new ThreadData { 
-                  Td=t,
-                  Data=goodId
+                    Td=t,
+                    Data=goodId
                 });
             }
         }
@@ -245,7 +213,7 @@ namespace SuperDo {
             _IsStop = false;
             _IsBindSc = false;
             //绑定下我的所有账号的出价记录
-            BindMyAllAutionData();
+            BindIni();
             this.timer1.Interval = this.numericUpDown1.Value.GetInt(0, false) * 1000;
             this.timer1.Start();
         }
@@ -254,7 +222,7 @@ namespace SuperDo {
             _IsStop = false;
             _IsBindSc = false;
             //绑定下我的所有账号的出价记录
-            BindMyAllAutionData();
+            BindIni();
             this.time_LetGo.Interval = this.numericUpDown1.Value.GetInt(0, false) * 1000;
             this.time_LetGo.Start();
         }
@@ -280,11 +248,13 @@ namespace SuperDo {
         /// <summary>
         /// 绑定用户所有出价（多线程）
         /// </summary>
-        private void BindMyAllAutionData() {
-            _TGetJFRun = new Thread(new ParameterizedThreadStart(new Action<object>(delegate(object o) {
+        private void BindIni() {
+            _TIni = new Thread(new ParameterizedThreadStart(new Action<object>(delegate(object o) {
+                lockOjb = new Dictionary<int, object>();
                 foreach (var goodId in GetGoodsIds()) {
                     WriteLog("正在绑定{0},所有用户的出价数据，请耐心等待！！".FormatStr(goodId));
                     if (!SuperHander.AutionDatas.ContainsKey(goodId.ToString())) SuperHander.AutionDatas.Add(goodId.ToString(), _bllSuper.GetAllAccountAution(goodId));
+                    lockOjb.Add(goodId,new object());
                 }
                 WriteLog("正在排除没有积分的用户，请耐心等待！！");
                 _bllSuper.DoMoveNoJF();
@@ -292,7 +262,7 @@ namespace SuperDo {
             })));
             //开启线程监控
             StartThreedMonitoring();
-            _TGetJFRun.Start();
+            _TIni.Start();
         }
 
         /// <summary>
@@ -302,14 +272,14 @@ namespace SuperDo {
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e) {
             string msg;
-            _TGetJFRun = new Thread(new ParameterizedThreadStart(new Action<object>(delegate(object o) {
+            _TIni = new Thread(new ParameterizedThreadStart(new Action<object>(delegate(object o) {
                 foreach (var item in CommonConfig.GetLoginCookies()) {
                     var isSc = _bllSuper.DoSign(item.Key, item.Value, out msg);
                     WriteLog(msg);
                 }
             })));
             StartThreedMonitoring();
-            _TGetJFRun.Start();
+            _TIni.Start();
             //本地测试
             //var isSc = _bllSuper.DoSign("563644741@qq.com",CommonConfig.GetTestLoginCookie(), out msg);
             //WriteLog(msg);
@@ -342,7 +312,7 @@ namespace SuperDo {
             _IsStop = false;
             _IsBindSc = false;
             //绑定下我的所有账号的出价记录
-            BindMyAllAutionData();
+            BindIni();
             this.time_LetGo.Interval = this.numericUpDown1.Value.GetInt(0, false) * 1000;
             this.time_LetGo.Start();
         }
