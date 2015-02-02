@@ -54,6 +54,10 @@
             this.ckb_time = new System.Windows.Forms.CheckBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.txt_sm = new System.Windows.Forms.TextBox();
+            this.txt_sh = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -62,7 +66,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(232, 385);
+            this.button1.Location = new System.Drawing.Point(287, 385);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(37, 23);
             this.button1.TabIndex = 0;
@@ -149,7 +153,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(275, 385);
+            this.button5.Location = new System.Drawing.Point(330, 385);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(50, 23);
             this.button5.TabIndex = 8;
@@ -259,7 +263,7 @@
             // 
             // txt_hour
             // 
-            this.txt_hour.Location = new System.Drawing.Point(4, 3);
+            this.txt_hour.Location = new System.Drawing.Point(62, 3);
             this.txt_hour.Name = "txt_hour";
             this.txt_hour.Size = new System.Drawing.Size(20, 21);
             this.txt_hour.TabIndex = 14;
@@ -267,7 +271,7 @@
             // 
             // txt_m
             // 
-            this.txt_m.Location = new System.Drawing.Point(29, 3);
+            this.txt_m.Location = new System.Drawing.Point(87, 3);
             this.txt_m.Name = "txt_m";
             this.txt_m.Size = new System.Drawing.Size(20, 21);
             this.txt_m.TabIndex = 15;
@@ -276,7 +280,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(21, 5);
+            this.label3.Location = new System.Drawing.Point(79, 5);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(11, 12);
             this.label3.TabIndex = 16;
@@ -287,7 +291,7 @@
             this.ckb_time.AutoSize = true;
             this.ckb_time.Checked = true;
             this.ckb_time.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ckb_time.Location = new System.Drawing.Point(55, 5);
+            this.ckb_time.Location = new System.Drawing.Point(114, 5);
             this.ckb_time.Name = "ckb_time";
             this.ckb_time.Size = new System.Drawing.Size(48, 16);
             this.ckb_time.TabIndex = 17;
@@ -308,14 +312,52 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.panel2.Controls.Add(this.label5);
+            this.panel2.Controls.Add(this.label4);
+            this.panel2.Controls.Add(this.txt_sm);
+            this.panel2.Controls.Add(this.txt_sh);
             this.panel2.Controls.Add(this.ckb_time);
             this.panel2.Controls.Add(this.label3);
             this.panel2.Controls.Add(this.txt_m);
             this.panel2.Controls.Add(this.txt_hour);
             this.panel2.Location = new System.Drawing.Point(110, 385);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(112, 26);
+            this.panel2.Size = new System.Drawing.Size(169, 26);
             this.panel2.TabIndex = 19;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(19, 5);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(11, 12);
+            this.label4.TabIndex = 20;
+            this.label4.Text = ":";
+            // 
+            // txt_sm
+            // 
+            this.txt_sm.Location = new System.Drawing.Point(27, 3);
+            this.txt_sm.Name = "txt_sm";
+            this.txt_sm.Size = new System.Drawing.Size(20, 21);
+            this.txt_sm.TabIndex = 19;
+            this.txt_sm.Text = "05";
+            // 
+            // txt_sh
+            // 
+            this.txt_sh.Location = new System.Drawing.Point(2, 3);
+            this.txt_sh.Name = "txt_sh";
+            this.txt_sh.Size = new System.Drawing.Size(20, 21);
+            this.txt_sh.TabIndex = 18;
+            this.txt_sh.Text = "10";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(47, 6);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(11, 12);
+            this.label5.TabIndex = 21;
+            this.label5.Text = "-";
             // 
             // Form1
             // 
@@ -381,6 +423,10 @@
         private System.Windows.Forms.CheckBox ckb_time;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txt_sm;
+        private System.Windows.Forms.TextBox txt_sh;
+        private System.Windows.Forms.Label label5;
     }
 }
 

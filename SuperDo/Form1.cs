@@ -332,13 +332,20 @@ namespace SuperDo {
             }
             if (this.ckb_time.Checked) { 
                 var nowDate=DateTime.Now;
+                var sDateTime = nowDate.Date;
+                sDateTime = sDateTime.AddHours(this.txt_sh.Text.GetInt(0, false)).AddMinutes(this.txt_sm.Text.GetInt(0,false)) ;
                 var eDateTime = nowDate.Date;
-                eDateTime=eDateTime.AddHours(this.txt_hour.Text.GetInt(0, false));
-                eDateTime=eDateTime.AddMinutes(this.txt_m.Text.GetInt(0, false));
+                eDateTime=eDateTime.AddHours(this.txt_hour.Text.GetInt(0, false)).AddMinutes(this.txt_m.Text.GetInt(0, false));
+                if (nowDate.CompareTo(sDateTime) < 0) {
+                    WriteLog("还未到设置开始时间，当前时间{0}，主人请耐心等待！！！".FormatStr(nowDate.ToString("yyyy-MM-dd HH:mm:ss")));
+                    return;
+                }
                 if (nowDate.CompareTo(eDateTime) >= 0) {
+                    WriteLog("已经到达结束时间:{0},Game Over ！！！".FormatStr(nowDate.ToString("yyyy-MM-dd HH:mm:ss")));
                     this.time_LetGo.Stop();
                     return;
                 }
+
             }
             SuperLetDo();
         }
